@@ -1,0 +1,33 @@
+{
+  "name": "muawaz-habib-portfolio",
+  "version": "1.0.0",
+  "description": "Personal portfolio website for Muawaz Habib - Computer Science Student & Aspiring Web Developer",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "build:css": "npx tailwindcss -i ./src/input.css -o ./public/css/tailwind.css --minify",
+    "watch:css": "npx tailwindcss -i ./src/input.css -o ./public/css/tailwind.css --watch"
+  },
+  "keywords": [
+    "portfolio",
+    "developer",
+    "web-development",
+    "express",
+    "tailwind"
+  ],
+  "author": "Muawaz Habib",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14"
+  }
+}
