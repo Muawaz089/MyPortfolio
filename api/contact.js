@@ -1,29 +1,5 @@
-const TYPES = new Set([
-  'Landing Page Design',
-  'Website Debugging',
-  'Excel Cleanup',
-  'Word / PDF Formatting',
-  'Something else'
-]);
-
 function plain(value) {
   return String(value ?? '').replace(/[\r\n]+/g, ' ').trim();
-}
-
-function check(req) {
-  const body = req.body || {};
-  const name = plain(body.name);
-  const email = plain(body.email);
-  const type = plain(body.type);
-  const budget = plain(body.budget);
-  const message = String(body.message ?? '').trim();
-
-  if (!name || name.length > 80) return { error: 'Enter your name (max 80 characters).' };
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return { error: 'Enter a valid email address.' };
-  if (!TYPES.has(type)) return { error: 'Pick a valid project type.' };
-  if (message.length < 10 || message.length > 2000) return { error: 'Message must be between 10 and 2000 characters.' };
-
-  return { name, email, type, budget: budget.slice(0, 40), message };
 }
 
 function escapeHtml(value) {
@@ -32,43 +8,47 @@ function escapeHtml(value) {
   })[c]);
 }
 
+function check(req) {
+  const body = req.body || {};
+  const name = plain(body.name);
+  const email = plain(body.email);
+  const subject = plain(body.subject);
+  const message = String(body.message ?? '').trim();
+
+  if (!name || name.length > 80) return { error: 'Name is required (max 80 characters).' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return { error: 'A valid email address is required.' };
+  if (!subject || subject.length > 120) return { error: 'Subject is required (max 120 characters).' };
+  if (message.length < 10 || message.length > 2000) return { error: 'Message must be at least 10 characters long.' };
+
+  return { name, email, subject, message };
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
-    return res.status(405).json({ ok: false, message: 'Use POST for this endpoint.' });
+    return res.status(405).json({ success: false, message: 'Use POST for this endpoint.' });
   }
 
   const data = check(req);
-  if (data.error) return res.status(400).json({ ok: false, message: data.error });
+  if (data.error) return res.status(400).json({ success: false, message: data.error });
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('[contact] RESEND_API_KEY is missing');
-    return res.status(500).json({ ok: false, message: 'Email is not configured yet. Please email mavizm233@gmail.com directly.' });
+    return res.status(500).json({ success: false, message: 'Email is not configured yet. Please email mavizm233@gmail.com directly.' });
   }
 
   const to = process.env.CONTACT_TO_EMAIL || 'mavizm233@gmail.com';
   const from = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
 
-  const text = [
-    `Name: ${data.name}`,
-    `Email: ${data.email}`,
-    `Project type: ${data.type}`,
-    data.budget ? `Budget: PKR ${data.budget}` : '',
-    '',
-    'Message:',
-    data.message
-  ].filter((line) => line !== undefined).join('\n');
-
+  const text = `From: ${data.name} (${data.email})\nSubject: ${data.subject}\n\nMessage:\n${data.message}`;
   const html = `
-    <div style="font-family:Arial,sans-serif;max-width:600px;color:#1A1614">
-      <h2>New portfolio message</h2>
-      <p><b>Name:</b> ${escapeHtml(data.name)}</p>
-      <p><b>Email:</b> <a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a></p>
-      <p><b>Project type:</b> ${escapeHtml(data.type)}</p>
-      ${data.budget ? `<p><b>Budget:</b> PKR ${escapeHtml(data.budget)}</p>` : ''}
-      <hr />
-      <p style="white-space:pre-wrap">${escapeHtml(data.message)}</p>
+    <div style="font-family: Arial, sans-serif; padding: 20px; color: #0f172a; max-width: 600px; border: 1px solid #e2e8f0; border-radius: 12px;">
+      <h2 style="color: #BF0C2F;">New Contact Form Message</h2>
+      <p><strong>From:</strong> ${escapeHtml(data.name)} (&lt;<a href="mailto:${escapeHtml(data.email)}">${escapeHtml(data.email)}</a>&gt;)</p>
+      <p><strong>Subject:</strong> ${escapeHtml(data.subject)}</p>
+      <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 20px 0;" />
+      <p style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">${escapeHtml(data.message)}</p>
     </div>
   `;
 
@@ -83,7 +63,7 @@ export default async function handler(req, res) {
         from,
         to: [to],
         reply_to: data.email,
-        subject: `[Portfolio] ${data.type} — ${data.name}`,
+        subject: `[Portfolio Contact] ${data.subject}`,
         text,
         html
       }),
@@ -93,13 +73,13 @@ export default async function handler(req, res) {
     const out = await response.json().catch(() => ({}));
     if (!response.ok) {
       console.error(`[contact] Resend ${response.status}:`, out.message || out);
-      return res.status(502).json({ ok: false, message: 'Delivery failed right now. Please email mavizm233@gmail.com directly.' });
+      return res.status(502).json({ success: false, message: 'The message could not be emailed right now. Please try again later.' });
     }
 
-    console.log(`[contact] delivered from ${data.email} (${data.type})`);
-    return res.status(200).json({ ok: true, message: 'Message sent.' });
+    console.log(`[contact] delivered from ${data.name} <${data.email}>`);
+    return res.status(200).json({ success: true, sent: true, message: 'Your message has been sent to the email.' });
   } catch (err) {
     console.error('[contact]', err.message);
-    return res.status(502).json({ ok: false, message: 'Delivery failed right now. Please email mavizm233@gmail.com directly.' });
+    return res.status(502).json({ success: false, message: 'The message could not be emailed right now. Please try again later.' });
   }
 }

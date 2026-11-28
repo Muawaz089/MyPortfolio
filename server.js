@@ -1,6 +1,7 @@
 import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import contactHandler from './api/contact.js';
 
@@ -12,17 +13,25 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// small enough. no need to accept essays.
-app.use(express.json({ limit: '20kb' }));
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Serve static frontend files from 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/api/contact', contactHandler);
 
+// Fallback route to serve index.html for SPA/anchor navigation
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(PORT, () => {
-  console.log(`Portfolio running at http://localhost:${PORT}`);
-  console.log(`Email delivery: ${process.env.RESEND_API_KEY ? 'Resend configured' : 'RESEND_API_KEY missing'}`);
+  console.log(`=======================================================`);
+  console.log(`  Muawaz Habib Portfolio Web Server is running!`);
+  console.log(`  Local URL: http://localhost:${PORT}`);
+  console.log(`  Email delivery: ${process.env.RESEND_API_KEY ? 'Resend configured' : 'RESEND_API_KEY missing'}`);
+  console.log(`=======================================================`);
 });
