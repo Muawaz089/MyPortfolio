@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error('[contact] RESEND_API_KEY is missing');
-    return res.status(500).json({ success: false, message: 'Email is not configured yet. Please email mavizm233@gmail.com directly.' });
+    return res.status(500).json({ success: false, message: 'Email is not configured yet.' });
   }
 
   const to = process.env.CONTACT_TO_EMAIL || 'mavizm233@gmail.com';

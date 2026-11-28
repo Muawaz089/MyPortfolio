@@ -144,9 +144,9 @@
     void form.offsetWidth;
     form.classList.add('shake');
   };
-  const showDirectEmail = () => {
+  const showDirectEmail = (prefix = 'Couldn’t send right now.') => {
     const link = el('a', { href: `mailto:${CONTACT_EMAIL}`, text: 'email me directly' });
-    status.replaceChildren(document.createTextNode('Couldn’t send right now. Please '), link, document.createTextNode(' instead.'));
+    status.replaceChildren(document.createTextNode(`${prefix} Please `), link, document.createTextNode(' instead.'));
   };
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -166,9 +166,9 @@
       if (!res.ok || !out.success) throw new Error(out.message || 'Something went wrong.');
       status.className = 'ok'; status.textContent = out.message || 'Message sent.';
       form.reset();
-    } catch {
-      status.className = 'err'; status.textContent = '';
-      showDirectEmail(); shakeForm();
+    } catch (err) {
+      status.className = 'err';
+      showDirectEmail(err.message || 'Couldn’t send right now.'); shakeForm();
     } finally {
       $('cSubmit').disabled = false;
     }
