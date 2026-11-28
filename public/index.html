@@ -1,111 +1,441 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Muawaz Habib | Freelance Web &amp; Data Specialist</title>
-  <meta name="description" content="Muawaz Habib: affordable freelance landing pages, website debugging, Excel formatting and Word/PDF cleanup. Fast turnaround, guaranteed." />
-  <meta property="og:title" content="Muawaz Habib | Freelance Web &amp; Data Specialist" />
-  <meta property="og:description" content="Landing pages, web debugging, Excel &amp; PDF formatting. Fast and affordable." />
+  <title>Muawaz Habib — Freelance Web &amp; Data Specialist</title>
+  <meta name="description" content="Freelance landing pages, website fixes and Excel / Word / PDF cleanup. Based in Lahore, working online. Fast turnaround, fair rates." />
+  <meta property="og:title" content="Muawaz Habib — Freelance Web &amp; Data Specialist" />
+  <meta property="og:description" content="Landing pages, website debugging and document cleanup. Built in Lahore, delivered online." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Sora:wght@600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;600&family=Sora:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper: #FBF7F2;
+      --ink: #1A1614;
+      --muted: #5A4F49;
+      --line: #E4D8CC;
+      --soft: #F4EAE0;
+      --accent: #C40F33; /* calmed the red down, old one was basically neon */
+      --accent-dark: #9E0B29;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font: 400 16px/1.65 "Instrument Sans", system-ui, sans-serif;
+    }
+    h1, h2, h3 { font-family: Sora, "Instrument Sans", sans-serif; line-height: 1.2; margin: 0 0 .5rem; }
+    h1 { font-size: clamp(2.3rem, 8vw, 4.25rem); letter-spacing: -.03em; }
+    h2 { font-size: 1.75rem; margin-bottom: 1rem; }
+    h3 { font-size: 1.08rem; }
+    p { margin: 0 0 .75rem; max-width: 68ch; }
+    a { color: var(--accent-dark); text-underline-offset: 3px; }
+    ul { margin: 0; padding: 0; list-style: none; }
+    :focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; border-radius: 4px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+    .skip { position: absolute; left: -999px; top: 8px; z-index: 10; background: var(--ink); color: #fff; padding: .6rem 1rem; border-radius: 8px; }
+    .skip:focus { left: 8px; }
+
+    .wrap { width: min(100% - 2.5rem, 1000px); margin-inline: auto; }
+
+    /* nav */
+    .topbar { position: sticky; top: 0; z-index: 5; background: rgba(251, 247, 242, .96); border-bottom: 1px solid var(--line); }
+    .nav { min-height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { font: 700 1rem Sora, sans-serif; color: var(--ink); text-decoration: none; white-space: nowrap; }
+    .menu-btn { display: none; font: 600 .9rem "Instrument Sans", sans-serif; background: var(--ink); color: #fff; border: 0; border-radius: 999px; padding: .5rem 1rem; cursor: pointer; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: .2rem; }
+    .nav-links a { display: block; padding: .45rem .7rem; border-radius: 8px; color: var(--ink); text-decoration: none; font-size: .92rem; font-weight: 600; }
+    .nav-links a[aria-current="page"] { background: var(--soft); color: var(--accent-dark); }
+
+    /* the one hover used everywhere. keep it boring. */
+    .btn, .card, .work { transition: transform .16s ease, box-shadow .16s ease; }
+    .btn:hover, .card:hover, .work:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -16px rgba(26, 22, 20, .65); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: .7rem 1.3rem; border-radius: 10px; border: 2px solid transparent; font: 600 .95rem "Instrument Sans", sans-serif; text-decoration: none; cursor: pointer; }
+    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary:hover { background: var(--accent-dark); }
+    .btn-secondary { background: transparent; color: var(--ink); border-color: var(--ink); }
+    .btn:disabled { opacity: .65; cursor: wait; transform: none; box-shadow: none; }
+
+    /* hero */
+    .hero { padding: 72px 0 40px; }
+    .stamp { display: inline-block; background: var(--soft); border: 1px solid var(--line); border-radius: 999px; padding: .3rem .85rem; font-size: .85rem; font-weight: 600; transform: rotate(-1.6deg); margin-left: 6px; }
+    .hero-line { margin-top: 18px; font-size: 1.08rem; color: var(--muted); }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 28px; }
+    .scribble { margin-top: 22px; padding-left: 12px; border-left: 2px solid var(--accent); font-style: italic; color: var(--muted); font-size: .92rem; }
+
+    section { padding: 44px 0 8px; }
+    .section-note { color: var(--muted); margin-bottom: 20px; }
+
+    /* about is deliberately plain */
+    .about p { max-width: 62ch; }
+    .about-list { display: flex; flex-wrap: wrap; gap: .5rem 1.5rem; margin-top: 18px; font-size: .92rem; color: var(--muted); }
+    .about-list li::before { content: "· "; color: var(--accent); }
+
+    /* services */
+    .cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 24px; align-items: start; }
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 22px; min-width: 0; }
+    .card:nth-child(2) { margin-top: 12px; } /* cards don't need to be perfectly lined up */
+    .card-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: 12px; }
+    .label { font: 700 .7rem Sora, sans-serif; letter-spacing: .08em; color: var(--accent-dark); background: var(--soft); border-radius: 6px; padding: .35rem .5rem; }
+    .kind { font-size: .8rem; color: var(--muted); }
+    .card p { color: var(--muted); font-size: .95rem; }
+    .bullets { display: grid; gap: .35rem; margin: 14px 0 18px; }
+    .bullets li { position: relative; padding-left: 16px; font-size: .92rem; }
+    .bullets li::before { content: ""; position: absolute; left: 0; top: .7em; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+    .card-foot { border-top: 1px solid var(--line); padding-top: 14px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .75rem; }
+    .card-foot small { color: var(--muted); }
+    .card-foot .btn { min-height: 38px; padding: .45rem 1rem; font-size: .88rem; }
+
+    /* skills: simple on purpose */
+    .skills { display: flex; flex-wrap: wrap; gap: .5rem; }
+    .skills li { border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: .35rem .8rem; font-size: .9rem; }
+
+    /* work */
+    .work-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+    .work { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; min-width: 0; }
+    .work:nth-child(2) { margin-top: 16px; }
+    .work:nth-child(4) { margin-top: 8px; }
+    .work-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem .75rem; margin-bottom: 10px; }
+    .tag { font-size: .78rem; font-weight: 600; color: var(--accent-dark); }
+    .work p { font-size: .93rem; color: var(--muted); }
+    .work p b { color: var(--ink); }
+    .work a { display: inline-block; margin-top: 6px; font-weight: 600; font-size: .92rem; }
+
+    /* contact */
+    .form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 24px; }
+    .field { display: grid; gap: 6px; min-width: 0; }
+    .field.wide { grid-column: 1 / -1; }
+    label { font-size: .9rem; font-weight: 600; }
+    input, select, textarea { width: 100%; min-width: 0; font: inherit; color: var(--ink); background: var(--paper); border: 1px solid #B9ABA1; border-radius: 10px; padding: .7rem .8rem; }
+    input:hover, select:hover, textarea:hover { border-color: var(--ink); }
+    ::placeholder { color: var(--muted); opacity: .85; }
+    input[aria-invalid="true"], select[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 120px; }
+    .err { min-height: 1.1em; color: var(--accent-dark); font-size: .82rem; }
+    .form-bottom { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; }
+    #formStatus { margin: 0; font-weight: 600; font-size: .92rem; overflow-wrap: anywhere; }
+    #formStatus.ok { color: #176B36; }
+    #formStatus.bad { color: var(--accent-dark); }
+    .rates { margin-top: 14px; font-size: .9rem; color: var(--muted); }
+
+    footer { margin-top: 56px; border-top: 1px solid var(--line); padding: 24px 0 36px; }
+    .footer-in { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    footer p { margin: 0; font-size: .9rem; color: var(--muted); }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .9rem; font-weight: 600; }
+    .footer-links a { color: var(--ink); }
+
+    @media (max-width: 720px) {
+      .wrap { width: min(100% - 1.75rem, 1000px); }
+      .menu-btn { display: inline-block; }
+      .nav { flex-wrap: wrap; padding: .65rem 0; min-height: 56px; }
+      .nav-links { display: none; width: 100%; flex-direction: column; align-items: stretch; padding-bottom: .5rem; }
+      .nav-links.open { display: flex; }
+      .hero { padding-top: 48px; }
+      .cards, .work-list, .form { grid-template-columns: 1fr; }
+      .card:nth-child(2), .work:nth-child(2), .work:nth-child(4) { margin-top: 0; }
+      .stamp { margin-left: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn, .card, .work { transition: none; }
+      .btn:hover, .card:hover, .work:hover { transform: none; box-shadow: none; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ambient" aria-hidden="true"></div>
   <a class="skip" href="#main">Skip to content</a>
 
-  <header class="nav-wrap">
-    <nav class="nav glass" aria-label="Main">
+  <header class="topbar">
+    <nav class="nav wrap" aria-label="Main navigation">
       <a class="brand" href="#home">Muawaz Habib</a>
-      <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
+      <button class="menu-btn" id="menuBtn" type="button" aria-controls="navLinks" aria-expanded="false" aria-label="Open navigation menu">Menu</button>
       <ul class="nav-links" id="navLinks">
         <li><a href="#home">Home</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#services">Services</a></li>
         <li><a href="#skills">Skills</a></li>
-        <li><a href="#projects">Projects</a></li>
+        <li><a href="#work">Work</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </nav>
   </header>
 
-  <main id="main">
-    <section id="home" class="hero">
-      <p class="hero-role">Freelance Web &amp; Data Specialist · Fast. Affordable. Done Right.</p>
-      <h1 class="hero-name">Muawaz Habib</h1>
-      <p class="hero-copy">I build stunning landing pages, debug and fix broken websites, and turn messy Excel spreadsheets and Word/PDF documents into clean, professional work. Fast turnaround, affordable prices, no agency bloat.</p>
-      <ul class="hero-badges">
-        <li>Fast Turnaround: 1 to 2 days</li>
-        <li>Affordable Rates: Freelancer pricing, not agency fees</li>
-        <li>Satisfaction Guaranteed: Revisions until you're happy</li>
-      </ul>
+  <main id="main" class="wrap">
+    <section class="hero" id="home">
+      <span class="stamp">Based in Lahore, working online</span>
+      <h1>Muawaz Habib</h1>
+      <p class="hero-line">Freelance web &amp; data specialist — I build landing pages, fix broken sites, and clean up Excel, Word and PDF files.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#services">See what I offer</a>
-        <a class="btn btn-ghost" href="#contact">Hire me now</a>
+        <a class="btn btn-primary" href="#work">View My Work</a>
+        <a class="btn btn-secondary" href="#contact">Hire Me</a>
       </div>
+      <p class="scribble">Usually reply the same day, unless I'm elbow-deep in a spreadsheet.</p>
     </section>
 
-    <section id="about" class="section">
+    <section id="about" class="about">
       <h2>About</h2>
-      <div class="glass panel about">
-        <p id="bioText"></p>
-        <dl class="facts" id="facts"></dl>
+      <p>I'm a Computer Science student in Lahore who freelances on the side. Most of my work is small and practical: a page that needs building, a site that broke after an update, or a spreadsheet that needs to stop looking like a crime scene.</p>
+      <p>I keep it straightforward — quick message, clear scope, fair price in PKR, and the finished files in your hands. I've also worked with clients in Karachi, mostly over calls and Google Meet.</p>
+      <ul class="about-list">
+        <li>Computer Science student</li>
+        <li>1–2 day turnaround on most jobs</li>
+        <li>Revisions included</li>
+      </ul>
+    </section>
+
+    <section id="services">
+      <h2>Services</h2>
+      <p class="section-note">Pick what you need. Tell me what's broken or what you want built, and I'll quote it before starting.</p>
+      <div class="cards">
+        <article class="card">
+          <div class="card-top"><span class="label">WEB</span><span class="kind">Web</span></div>
+          <h3>Landing Page Design</h3>
+          <p>Fast, good-looking landing pages that convert visitors into customers.</p>
+          <ul class="bullets">
+            <li>Fully responsive design</li>
+            <li>Hero, features and contact sections</li>
+            <li>Free revisions included</li>
+          </ul>
+          <div class="card-foot"><small>Turnaround: 1 to 3 days</small><a class="btn btn-primary" href="#contact">Get a quote</a></div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="label">FIX</span><span class="kind">Web</span></div>
+          <h3>Website Debugging</h3>
+          <p>Find and fix layout breaks, mobile issues and JavaScript bugs quickly.</p>
+          <ul class="bullets">
+            <li>CSS and layout bug fixes</li>
+            <li>Mobile and cross-browser repairs</li>
+            <li>Clear explanation of every fix</li>
+          </ul>
+          <div class="card-foot"><small>Turnaround: Same day to 1 day</small><a class="btn btn-primary" href="#contact">Get a quote</a></div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="label">DATA</span><span class="kind">Excel</span></div>
+          <h3>Excel Cleanup</h3>
+          <p>Messy spreadsheets turned into clean, professional workbooks.</p>
+          <ul class="bullets">
+            <li>Formatting, formulas and pivot tables</li>
+            <li>Remove duplicates and fix broken data</li>
+            <li>Print-ready page setup</li>
+          </ul>
+          <div class="card-foot"><small>Turnaround: 1 to 2 days</small><a class="btn btn-primary" href="#contact">Get a quote</a></div>
+        </article>
+
+        <article class="card">
+          <div class="card-top"><span class="label">DOCS</span><span class="kind">PDF / Word</span></div>
+          <h3>Word and PDF Formatting</h3>
+          <p>Professional documents with clean fonts, consistent layout and proper structure.</p>
+          <ul class="bullets">
+            <li>PDF to Word conversion</li>
+            <li>Merging, splitting and reordering pages</li>
+            <li>Fillable form creation</li>
+          </ul>
+          <div class="card-foot"><small>Turnaround: 1 to 2 days</small><a class="btn btn-primary" href="#contact">Get a quote</a></div>
+        </article>
       </div>
     </section>
 
-    <section id="services" class="section">
-      <h2>Services</h2>
-      <p class="lead">Pick what you need. Fast delivery, affordable prices, revisions included.</p>
-      <div class="svc-grid" id="svcGrid"></div>
-    </section>
-
-    <section id="skills" class="section">
+    <section id="skills">
       <h2>Skills</h2>
-      <div class="chips" id="skillTabs" role="group" aria-label="Filter skills"></div>
-      <ul class="skill-grid" id="skillGrid"></ul>
+      <ul class="skills">
+        <li>JavaScript</li><li>Python</li><li>HTML5 &amp; CSS3</li><li>Tailwind CSS</li>
+        <li>Node.js &amp; Express</li><li>REST APIs</li><li>SQL</li><li>Git &amp; GitHub</li>
+        <li>Microsoft Excel</li><li>Word &amp; PDF formatting</li>
+      </ul>
     </section>
 
-    <section id="projects" class="section">
-      <h2>Projects</h2>
-      <div class="project-grid" id="projectGrid"></div>
+    <section id="work">
+      <h2>Work</h2>
+      <p class="section-note">A few things I actually built. Live links open in a new tab.</p>
+      <div class="work-list">
+        <article class="work">
+          <div class="work-head"><h3>Saffron Stone Restaurant</h3><span class="tag">Live · Landing page</span></div>
+          <p><b>Problem:</b> A restaurant concept needed a page that made finding the menu and booking a table feel simple.</p>
+          <p><b>What I did:</b> Built a one-page responsive site with menu highlights, opening hours and an enquiry section.</p>
+          <p><b>Result:</b> Clean layout on mobile and desktop, live as a portfolio demo.</p>
+          <a href="https://muawaz089.github.io/Saffron-Stone-Restaurant-Website/" target="_blank" rel="noopener noreferrer">View live site</a>
+        </article>
+
+        <article class="work">
+          <div class="work-head"><h3>Northstar Digital</h3><span class="tag">Live · Landing page</span></div>
+          <p><b>Problem:</b> A studio concept wanted to explain its services without the usual agency jargon.</p>
+          <p><b>What I did:</b> Structured the page around services, selected work and a short process section, then built it responsive.</p>
+          <p><b>Result:</b> A clear demo site that reads well from phone to desktop.</p>
+          <a href="https://muawaz089.github.io/Northstar-Digital-Digital-Agency-Landing-Page/" target="_blank" rel="noopener noreferrer">View live site</a>
+        </article>
+
+        <article class="work">
+          <div class="work-head"><h3>TinDog</h3><span class="tag">Live · Bootstrap practice</span></div>
+          <p><b>Problem:</b> Needed a fun practice build to get comfortable with Bootstrap components.</p>
+          <p><b>What I did:</b> Put together a playful dog-dating landing page with features, pricing and FAQ sections.</p>
+          <p><b>Result:</b> Live demo, good practice at spacing and breakpoints.</p>
+          <a href="https://muawaz089.github.io/TinDog/" target="_blank" rel="noopener noreferrer">View live site</a>
+        </article>
+
+        <article class="work">
+          <div class="work-head"><h3>Customer Data Cleanup</h3><span class="tag">Excel · Completed</span></div>
+          <p><b>Problem:</b> Customer records had duplicate emails, mixed name casing and phone numbers in five different formats.</p>
+          <p><b>What I did:</b> Split the workbook into Raw Data, Cleaned Data and Cleaning Notes, removed duplicates and normalised the rest.</p>
+          <p><b>Result:</b> One workbook the client can actually filter and print without fixing it again.</p>
+        </article>
+
+        <article class="work">
+          <div class="work-head"><h3>Furniture Store</h3><span class="tag">Full stack · In progress</span></div>
+          <p><b>Problem:</b> Hard to picture how a piece of furniture looks at home from a flat photo.</p>
+          <p><b>What I did:</b> Added a product catalogue, a 3D viewer and AR placement on supported phones.</p>
+          <p><b>Result:</b> Still being built — cart and checkout come next.</p>
+        </article>
+      </div>
     </section>
 
-    <section id="contact" class="section">
+    <section id="contact">
       <h2>Contact</h2>
-      <form class="glass panel form" id="contactForm" novalidate>
-        <div class="field"><label for="cName">Name</label><input id="cName" name="name" autocomplete="name" required /></div>
-        <div class="field"><label for="cEmail">Email</label><input id="cEmail" name="email" type="email" autocomplete="email" required /></div>
-        <div class="field full"><label for="cSubject">Subject</label><input id="cSubject" name="subject" required /></div>
-        <div class="field full"><label for="cMessage">Message (at least 10 characters)</label><textarea id="cMessage" name="message" rows="5" required></textarea></div>
-        <div class="full form-foot">
-          <button class="btn btn-primary" type="submit" id="cSubmit">Send message</button>
+      <p class="section-note">Tell me what you need and I'll get back to you with a price and timeline.</p>
+      <form class="form" id="contactForm" novalidate>
+        <div class="field">
+          <label for="name">Name</label>
+          <input id="name" name="name" type="text" autocomplete="name" maxlength="80" required aria-describedby="err-name" />
+          <small class="err" id="err-name"></small>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-describedby="err-email" />
+          <small class="err" id="err-email"></small>
+        </div>
+        <div class="field">
+          <label for="type">Project type</label>
+          <select id="type" name="type" required aria-describedby="err-type">
+            <option value="">Choose one…</option>
+            <option value="Landing Page Design">Landing Page Design</option>
+            <option value="Website Debugging">Website Debugging</option>
+            <option value="Excel Cleanup">Excel Cleanup</option>
+            <option value="Word / PDF Formatting">Word / PDF Formatting</option>
+            <option value="Something else">Something else</option>
+          </select>
+          <small class="err" id="err-type"></small>
+        </div>
+        <div class="field">
+          <label for="budget">Budget (PKR) — optional</label>
+          <input id="budget" name="budget" type="text" maxlength="40" placeholder="e.g. 5000–8000" />
+          <small class="err" id="err-budget"></small>
+        </div>
+        <div class="field wide">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="5" maxlength="2000" required aria-describedby="err-message"></textarea>
+          <small class="err" id="err-message"></small>
+        </div>
+        <div class="form-bottom">
+          <button class="btn btn-primary" id="sendBtn" type="submit">Send message</button>
           <p id="formStatus" role="status" aria-live="polite"></p>
         </div>
       </form>
+      <p class="rates">Rates in PKR. Small fixes usually start around PKR 1,500 and a simple landing page around PKR 6,000 — final quote after I see the work.</p>
+      <p class="rates">Prefer email? <a href="mailto:mavizm233@gmail.com">mavizm233@gmail.com</a></p>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>&copy; <span id="year"></span> Muawaz Habib</p>
-    <div class="footer-links">
-      <a class="footer-github" href="https://github.com/Muawaz089" target="_blank" rel="noopener noreferrer" aria-label="Muawaz Habib on GitHub (opens in a new tab)">
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.93c.58.1.79-.25.79-.55v-2.1c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.12 3.05.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.38-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.66.8.55A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/>
-        </svg>
-        <span>GitHub</span>
-      </a>
-      <a href="#home">Back to top</a>
+  <footer>
+    <div class="footer-in wrap">
+      <p>© <span id="year"></span> Muawaz Habib · Made in Lahore</p>
+      <div class="footer-links">
+        <a href="https://github.com/Muawaz089" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="#home">Back to top</a>
+      </div>
     </div>
   </footer>
 
-  <dialog id="projectDialog" class="dialog glass" aria-labelledby="dlgTitle">
-    <button class="dlg-close" id="dlgClose" type="button" aria-label="Close project details">Close</button>
-    <div id="dlgBody"></div>
-  </dialog>
+  <script>
+    (() => {
+      document.getElementById('year').textContent = new Date().getFullYear();
 
-  <script src="/js/data.js"></script>
-  <script src="/js/main.js"></script>
+      // menu, nothing fancy
+      const menuBtn = document.getElementById('menuBtn');
+      const navLinks = document.getElementById('navLinks');
+      const closeMenu = () => {
+        navLinks.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.setAttribute('aria-label', 'Open navigation menu');
+      };
+      menuBtn.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        menuBtn.setAttribute('aria-expanded', String(open));
+        menuBtn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+      });
+      navLinks.addEventListener('click', (e) => { if (e.target.closest('a')) closeMenu(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+      document.addEventListener('click', (e) => { if (!e.target.closest('.nav')) closeMenu(); });
+
+      // form: no fake sending. if it fails, we say so.
+      const form = document.getElementById('contactForm');
+      const status = document.getElementById('formStatus');
+      const sendBtn = document.getElementById('sendBtn');
+      const fields = ['name', 'email', 'type', 'message'];
+
+      const setError = (key, msg) => {
+        const input = document.getElementById(key);
+        document.getElementById('err-' + key).textContent = msg;
+        if (msg) input.setAttribute('aria-invalid', 'true');
+        else input.removeAttribute('aria-invalid');
+      };
+
+      const validate = (data) => {
+        let firstBad = null;
+        fields.forEach((key) => setError(key, ''));
+        if (!data.name) { setError('name', 'Please enter your name.'); firstBad = firstBad || 'name'; }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) { setError('email', 'Enter a valid email address.'); firstBad = firstBad || 'email'; }
+        if (!data.type) { setError('type', 'Pick a project type.'); firstBad = firstBad || 'type'; }
+        if (data.message.length < 10) { setError('message', 'Write at least 10 characters so I know what you need.'); firstBad = firstBad || 'message'; }
+        return firstBad;
+      };
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form));
+        Object.keys(data).forEach((k) => { if (typeof data[k] === 'string') data[k] = data[k].trim(); });
+        status.className = '';
+        status.textContent = '';
+
+        const bad = validate(data);
+        if (bad) {
+          status.className = 'bad';
+          status.textContent = 'Check the highlighted fields.';
+          document.getElementById(bad).focus();
+          return;
+        }
+
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Sending…';
+        status.textContent = 'Sending…';
+
+        try {
+          const res = await fetch('/api/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+          });
+          const out = await res.json().catch(() => ({}));
+          if (!res.ok || !out.ok) throw new Error(out.message || 'Something went wrong. Please try again.');
+
+          status.className = 'ok';
+          status.textContent = 'Sent. I’ll get back to you soon.';
+          form.reset();
+        } catch (err) {
+          status.className = 'bad';
+          status.textContent = err.message || 'Couldn’t send right now. Please email me directly.';
+        } finally {
+          sendBtn.disabled = false;
+          sendBtn.textContent = 'Send message';
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
