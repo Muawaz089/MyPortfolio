@@ -148,6 +148,28 @@
     const link = el('a', { href: `mailto:${CONTACT_EMAIL}`, text: 'email me directly' });
     status.replaceChildren(document.createTextNode(`${prefix} Please `), link, document.createTextNode(' instead.'));
   };
+  const sendViaFormSubmit = async (data) => {
+    const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+        _replyto: data.email,
+        _subject: `[Portfolio Contact] ${data.subject}`,
+        _template: 'table',
+        _captcha: 'false'
+      })
+    });
+    const out = await res.json().catch(() => ({}));
+    const reply = `${out.message || ''} ${out.success || ''}`;
+    return {
+      ok: res.ok && Boolean(out.success || out.message),
+      pending: /activat|confirm/i.test(reply)
+    };
+  };
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const data = Object.fromEntries(new FormData(form));
@@ -159,19 +181,40 @@
       status.textContent = { cName: 'Enter your name.', cEmail: 'Enter a valid email address.', cSubject: 'Enter a subject.', cMessage: 'Write a message of at least 10 characters.' }[bad];
       $(bad).focus(); shakeForm(); return;
     }
-    $('cSubmit').disabled = true; status.className = 'sending'; status.textContent = 'Sending…';
+
+    $('cSubmit').disabled = true;
+    let done = false;
+
+    status.className = 'sending'; status.textContent = 'Sending…';
     try {
       const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
       const out = await res.json().catch(() => ({}));
-      if (!res.ok || !out.success) throw new Error(out.message || 'Something went wrong.');
-      status.className = 'ok'; status.textContent = out.message || 'Message sent.';
-      form.reset();
-    } catch (err) {
-      status.className = 'err';
-      showDirectEmail(err.message || 'Couldn’t send right now.'); shakeForm();
-    } finally {
-      $('cSubmit').disabled = false;
+      if (res.ok && out.success) {
+        status.className = 'ok'; status.textContent = out.message || 'Message sent.';
+        form.reset(); done = true;
+      }
+    } catch { /* backup below */ }
+
+    if (!done) {
+      status.className = 'sending'; status.textContent = 'Trying backup delivery…';
+      try {
+        const backup = await sendViaFormSubmit(data);
+        if (backup.pending) {
+          status.className = 'pending';
+          status.textContent = `Check ${CONTACT_EMAIL} for a FormSubmit confirmation link. Click it once, then send again.`;
+          done = true;
+        } else if (backup.ok) {
+          status.className = 'ok'; status.textContent = 'Message sent.';
+          form.reset(); done = true;
+        }
+      } catch { /* direct email below */ }
     }
+
+    if (!done) {
+      status.className = 'err';
+      showDirectEmail(); shakeForm();
+    }
+    $('cSubmit').disabled = false;
   });
 
   /* ---------- Scroll reveal ---------- */
