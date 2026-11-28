@@ -138,10 +138,29 @@
 
   /* ---------- Contact form ---------- */
   const form = $('contactForm'), status = $('formStatus');
+  const CONTACT_EMAIL = 'mavizm233@gmail.com';
   const shakeForm = () => {
     form.classList.remove('shake');
     void form.offsetWidth;
     form.classList.add('shake');
+  };
+  const sendViaFormSubmit = async (data) => {
+    const res = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      referrerPolicy: 'origin',
+      body: JSON.stringify({
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+        _replyto: data.email,
+        _subject: `[Portfolio Contact] ${data.subject}`,
+        _template: 'table',
+        _captcha: 'false'
+      })
+    });
+    return await res.json().catch(() => ({}));
   };
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -157,9 +176,19 @@
 
     $('cSubmit').disabled = true;
     status.className = 'sending'; status.textContent = 'Sending…';
+    let sent = false;
     try {
-      await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-    } catch { /* show the same confirmation */ }
+      const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+      const out = await res.json().catch(() => ({}));
+      sent = res.ok && out.success === true;
+    } catch { /* use FormSubmit */ }
+
+    if (!sent) {
+      try {
+        const out = await sendViaFormSubmit(data);
+        sent = String(out.success).toLowerCase() === 'true';
+      } catch { /* still show the same confirmation */ }
+    }
 
     form.reset();
     status.className = 'ok'; status.textContent = 'Message sent.';
