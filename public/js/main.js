@@ -165,9 +165,11 @@
     });
     const out = await res.json().catch(() => ({}));
     const reply = `${out.message || ''} ${out.success || ''}`;
+    const success = String(out.success).toLowerCase() === 'true';
     return {
-      ok: res.ok && Boolean(out.success || out.message),
-      pending: /activat|confirm/i.test(reply)
+      ok: res.ok && success,
+      pending: /activat|confirm/i.test(reply),
+      message: out.message || (success ? 'Message sent.' : 'FormSubmit refused the message.')
     };
   };
   form.addEventListener('submit', async (e) => {
@@ -195,6 +197,7 @@
       }
     } catch { /* backup below */ }
 
+    let backupNote = '';
     if (!done) {
       status.className = 'sending'; status.textContent = 'Trying backup delivery…';
       try {
@@ -204,15 +207,19 @@
           status.textContent = `Check ${CONTACT_EMAIL} for a FormSubmit confirmation link. Click it once, then send again.`;
           done = true;
         } else if (backup.ok) {
-          status.className = 'ok'; status.textContent = 'Message sent.';
+          status.className = 'ok'; status.textContent = 'Message sent. Check spam for FormSubmit mail.';
           form.reset(); done = true;
+        } else {
+          backupNote = backup.message;
         }
-      } catch { /* direct email below */ }
+      } catch (err) {
+        backupNote = err.message || '';
+      }
     }
 
     if (!done) {
       status.className = 'err';
-      showDirectEmail(); shakeForm();
+      showDirectEmail(backupNote); shakeForm();
     }
     $('cSubmit').disabled = false;
   });
