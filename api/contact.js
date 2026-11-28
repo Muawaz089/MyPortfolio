@@ -77,7 +77,7 @@ export default async function handler(req, res) {
     }
 
     console.log(`[contact] delivered from ${data.name} <${data.email}>`);
-    return res.status(200).json({ success: true, sent: true, message: 'Your message has been sent to the email.' });
+    return res.status(200).json({ success: true, sent: true, message: 'Message sent.' });
   } catch (err) {
     console.error('[contact]', err.message);
     return res.status(502).json({ success: false, message: 'The message could not be emailed right now. Please try again later.' });
