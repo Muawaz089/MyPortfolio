@@ -158,11 +158,10 @@
     $('cSubmit').disabled = true;
     status.className = 'sending'; status.textContent = 'Sending…';
     try {
-      const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
-      const out = await res.json().catch(() => ({}));
-      if (res.ok && out.success) form.reset();
+      await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
     } catch { /* show the same confirmation */ }
 
+    form.reset();
     status.className = 'ok'; status.textContent = 'Message sent.';
     $('cSubmit').disabled = false;
   });
